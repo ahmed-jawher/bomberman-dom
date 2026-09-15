@@ -1,0 +1,301 @@
+
+
+/* Pixelated border effect */
+/* .pixel-border {
+  border-style: solid;
+  border-width: var(--pixel-size);
+  border-image: url('data:image/svg+xml;utf8,<svg width="4" height="4" viewBox="0 0 4 4" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h4v4H0V0z" fill="%237b2cbf"/></svg>') 1 stretch;
+  image-rendering: pixelated;
+} */
+
+/* Main Chat Container */
+.chatContainer {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+  /* background-color: var(--dark-color); */
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+  url(../assets/background.jpeg);
+background-position: center;
+background-repeat: no-repeat;
+background-size: cover;
+box-shadow: inset 0 0 100px rgba(123, 44, 191, 0.4);
+  /* box-shadow: 0 0 20px rgba(123, 44, 191, 0.3); */
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--secondary-color);
+}
+
+/* Room Header */
+.roomHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: rgba(11, 12, 22, 0.9);
+  border-bottom: 4px solid var(--secondary-color);
+  /* backdrop-filter: blur(10px); */
+}
+
+.timer {
+  font-size: 1.2rem;
+  color: var(--accent-color);
+  text-shadow: 0 0 8px rgba(111, 255, 135, 0.7);
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px 10px;
+  border-radius: 2px;
+  position: relative;
+  animation: pulse 2s infinite;
+}
+
+.copybtn {
+  font-family: var(--font-family);
+  background-color: var(--secondary-color);
+  color: #0d1b2a;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(0, 180, 216, 0.5);
+  transition: all 0.2s ease;
+}
+
+.copybtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(0, 180, 216, 0.8);
+}
+
+.copybtn:active {
+  transform: translateY(1px);
+  box-shadow: 0 0 5px rgba(0, 180, 216, 0.8);
+}
+
+/* Top Bar - Player List */
+.topBar {
+  background-color: rgba(11, 12, 22, 0.9);
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-height: 150px;
+  /* overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) var(--dark-color); */
+  border-bottom: 3px solid var(--secondary-color);
+}
+
+.topBar span {
+  background-color: rgba(0, 180, 216, 0.2);
+  color: var(--light-color);
+  padding: 5px 10px;
+  border-radius: 2px;
+  font-size: 0.75rem;
+  display: inline-block;
+  margin: 2px;
+  width: 95%;
+  box-shadow: 0 0 5px rgba(0, 180, 216, 0.5);
+  position: relative;
+  border-left: 2px solid var(--secondary-color);
+}
+
+/* .topBar span::before {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+  left: -3px;
+  top: 50%;
+  transform: translateY(-50%);
+  box-shadow: 0 0 8px var(--accent-color);
+} */
+
+/* Messages Box */
+.messagesBox {
+  padding: 15px;
+  overflow-y: auto;
+  height: 100%;
+  /* background-color: rgba(13, 27, 42, 0.7); */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+                    url('data:image/svg+xml;utf8,<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="%230d1b2a"/><rect x="1" y="1" width="38" height="38" fill="%23091521" rx="2" ry="2"/></svg>');
+  background-size: 40px 40px; */
+  /* backdrop-filter: blur(10); */
+  background-color: rgba(11, 12, 22, 0.9);
+
+}
+
+.message {
+  padding: 12px;
+  margin-bottom: 10px;
+  background-color: rgba(13, 27, 42, 0.8);
+  border-left: 3px solid var(--secondary-color);
+  word-wrap: break-word;
+  animation: slideIn 0.3s ease;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.nickname {
+  font-weight: bold;
+  color: var(--primary-color);
+  margin-right: 10px;
+  display: inline-block;
+  text-shadow: 0 0 5px rgba(123, 44, 191, 0.5);
+}
+
+.text {
+  color: var(--light-color);
+}
+
+.time {
+  font-size: 0.7rem;
+  color: #8d99ae;
+  float: right;
+}
+
+/* Input Bar */
+.inputBar {
+  display: flex;
+  padding: 10px;
+  background-color: rgba(11, 12, 22, 0.8);
+  border-top: 3px solid var(--secondary-color);
+}
+
+#chatInput {
+  flex: 1;
+  padding: 10px;
+  border: 2px solid var(--secondary-color);
+  color: var(--light-color);
+  background-color: rgba(11, 12, 22, 0.8);
+  font-family: var(--font-family);
+  font-size: 0.9rem;
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(0, 180, 216, 0.2) inset;
+}
+
+#chatInput:focus {
+  outline: none;
+  box-shadow: 0 0 12px rgba(0, 180, 216, 0.4) inset;
+  border-color: var(--accent-color);
+}
+
+#sendBtn {
+  font-family: var(--font-family);
+  background-color: var(--secondary-color);
+  color: var(--light-color);
+  border: none;
+  padding: 10px 15px;
+  margin-left: 10px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  box-shadow: 0 0 10px rgba(0, 180, 216, 0.2);
+  transition: all 0.2s ease;
+  border-radius: 2px;
+}
+
+#sendBtn:hover {
+  background-color: rgba(0, 180, 216, 0.6);
+  box-shadow: 0 0 15px rgba(0, 180, 216, 0.6);
+}
+
+#sendBtn:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 5px rgba(123, 44, 191, 0.8);
+}
+
+/* Responsive Adjustments */
+@media (min-width: 768px) {
+  .chatContainer {
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: auto 1fr auto;
+  }
+  
+  .roomHeader {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    
+  }
+  
+  .topBar {
+    grid-column: 1;
+    grid-row: 2;
+    flex-direction: column;
+    max-height: none;
+    border-right: 3px solid var(--secondary-color);
+    border-bottom: none;
+  }
+  
+  .messagesBox {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  
+  .inputBar {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+}
+
+/* Animations */
+@keyframes pulse {
+  0% { opacity: 1; text-shadow: 0 0 5px rgba(111, 255, 135, 0.5); }
+  50% { opacity: 0.9; text-shadow: 0 0 15px rgba(111, 255, 135, 0.8); }
+  100% { opacity: 1; text-shadow: 0 0 5px rgba(111, 255, 135, 0.5); }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(13, 27, 42, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+}
+
+/* Player Count Display - Added to top bar */
+.topBar::before {
+  content: attr(data-player-count) " Players";
+  display: block;
+  margin-top: 10px;
+  padding: 8px 10px;
+  background-color: rgba(0, 180, 216, 0.2);
+  color: var(--accent-color);
+  font-size: 0.8rem;
+  text-align: center;
+  width: 88%;
+  box-shadow: 0 0 10px rgba(0, 180, 216, 0.3);
+  border: 1px solid var(--secondary-color);
+  text-shadow: 0 0 5px rgba(111, 255, 135, 0.5);
+}
+
+/* Add the custom font */
+@font-face {
+  font-family: 'Press Start 2P';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/pressstart2p/v14/e3t4euO8T-267oIAQAu6jDQyK3nVivNm4I81.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
