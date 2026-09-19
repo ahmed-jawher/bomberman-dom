@@ -58,3 +58,82 @@
     box-shadow: 0 0 10px rgba(0, 180, 216, 0.7);
   }
   
+/* --- Result panel ------------------------------------------------------- */
+
+.resultWinner {
+  font-size: 0.85rem;
+  color: var(--light-color);
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+  word-break: break-word;
+}
+
+.resultList {
+  list-style: none;
+  margin: 0 0 25px 0;
+  padding: 0;
+  text-align: left;
+}
+
+.resultRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  border: 2px solid rgba(233, 236, 239, 0.25);
+  background-color: rgba(13, 27, 42, 0.6);
+  font-size: 0.7rem;
+  color: var(--light-color);
+}
+
+.resultRank {
+  flex: 0 0 auto;
+  min-width: 2.2em;
+  color: var(--secondary-color);
+}
+
+.resultName {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resultStatus {
+  flex: 0 0 auto;
+  color: var(--accent-color);
+}
+
+.resultRow--winner {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 15px rgba(111, 255, 135, 0.35);
+}
+
+.resultRow--out {
+  opacity: 0.55;
+}
+
+.resultRow--out .resultStatus {
+  color: #ff6b6b;
+}
+
+.resultRow--me {
+  border-left-width: 6px;
+  border-left-color: var(--secondary-color);
+}
+
+@media (max-width: 480px) {
+  .winPopUp {
+    padding: 25px 15px;
+  }
+
+  .winMessage {
+    font-size: 1.1rem;
+  }
+
+  .resultRow {
+    font-size: 0.6rem;
+    padding: 8px;
+  }
+}

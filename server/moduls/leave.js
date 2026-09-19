@@ -1,6 +1,7 @@
 import { io } from "../server.js";
 import { Rooms, clearAvailableRoom } from "./room.js";
 import { Players } from "./player.js";
+import { standingsOf } from "../bomb/updateLives.js";
 
 /**
  * A player leaves a room without being blown up: they closed the tab, or the
@@ -99,10 +100,28 @@ function leaveStartedGame(room, seat, roomUuid) {
 
   if (room.AlivePlayers > 1) return;
 
-  const winner = room.Players.find((p) => Players[p.Uuid]?.JoinedRoom !== "");
+  if (room.Finished) {
+    discardRoomIfEmpty(room, roomUuid);
+    return;
+  }
+
+  // The seat still standing, as in updateLife(): asking whether the account
+  // is still in the room gets it wrong when one account holds two seats.
+  const winner = room.Players.find((p) => p.Lives > 0);
   if (winner) {
+    room.Finished = true;
+    // Taken before JoinedRoom is cleared, so the scoreboard is the state the
+    // game actually ended in.
+    const standings = standingsOf(roomUuid);
     Players[winner.Uuid].JoinedRoom = "";
-    io.to(roomUuid).emit("lives", { win: true, Uuid: winner.Uuid });
+    // Same payload as a win by explosion: the result panel names the winner
+    // and lists the final lives however the game happened to end.
+    io.to(roomUuid).emit("lives", {
+      win: true,
+      Uuid: winner.Uuid,
+      nickname: winner.Nickname,
+      standings,
+    });
     return;
   }
 

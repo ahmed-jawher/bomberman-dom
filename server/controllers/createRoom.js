@@ -61,6 +61,19 @@ function createRoomrHandler(req, res) {
 
   let player = getPlayer(uuid);
   if (player) {
+    // Already seated somewhere: hand that seat back instead of a second one.
+    // A uuid lives in localStorage, so every tab of the same browser is the
+    // same player; seating it twice let one tab's death mark the account out
+    // while its other seat was still alive, and the game ended in a false draw.
+    const current = Rooms[player.JoinedRoom];
+    const seat = current?.Players.findIndex((p) => p.Uuid === player.Uuid) ?? -1;
+    if (seat !== -1) {
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify({ room: current, nbr: seat + 1 }));
+      return;
+    }
+
     switch (type) {
       case "RR":
         JoinRRoom(res, player);

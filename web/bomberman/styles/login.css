@@ -104,3 +104,14 @@
     left: 100%;
   }
   
+/* Inline validation message under the nickname field. It keeps its box when
+   empty so showing a message does not shift the button down. */
+.fieldError {
+  display: block;
+  min-height: 1.2em;
+  margin: 10px 0 0;
+  font-size: 0.6rem;
+  line-height: 1.2;
+  color: #ff6b6b;
+  text-shadow: 0 0 6px rgba(255, 107, 107, 0.5);
+}

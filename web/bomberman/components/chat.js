@@ -4,6 +4,7 @@ import { getCurrentTime } from "../utils/helpers.js";
 import { startWebSocket } from "../socket/startSocket.js";
 import { INFO } from "../utils/playerStatus.js";
 import { ref, getRef } from "../utils/refs.js";
+import { LIMITS } from "../utils/limits.js";
 
 function HeaderChat(players) {
   let PlayersVDom = [];
@@ -38,7 +39,7 @@ function MessagePart(messages) {
 }
 
 function SendMessage(message) {
-  if (message == "" || message.length > 50) {
+  if (message == "" || message.length > LIMITS.message) {
     return;
   }
 
@@ -61,6 +62,7 @@ function InputPart() {
       ref: ref("inputMessages"),
       placeholder: "Type a message...",
       id: "chatInput",
+      maxlength: LIMITS.message,
       onKeyUp: (e) => {
         if (e.key == "Enter") {
           SendMessage(e.target.value);

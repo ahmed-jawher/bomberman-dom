@@ -1,5 +1,33 @@
+/* A hit player is not switched off, they burn out: the fade runs alongside the
+   explosion that killed them, so the board shows the cause before the result
+   panel appears. */
 .loser {
-  opacity: 0%;
+  opacity: 0;
+  animation: playerDeath 0.9s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes playerDeath {
+  0% {
+    opacity: 1;
+    transform-origin: center bottom;
+    filter: none;
+  }
+
+  20% {
+    opacity: 1;
+    filter: brightness(2.5) saturate(0);
+  }
+
+  60% {
+    opacity: 0.6;
+    filter: brightness(1.6) saturate(0.4);
+  }
+
+  100% {
+    opacity: 0;
+    filter: brightness(1) saturate(0);
+  }
 }
 
 /* Main Game Container */

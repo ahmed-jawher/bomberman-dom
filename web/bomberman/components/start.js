@@ -2,6 +2,7 @@ import { Component, h } from "../../framework1/index.js";
 import { StartGetRoom } from "../utils/playerStatus.js";
 import { paste } from "../utils/copyPast.js";
 import { ref, getRef } from "../utils/refs.js";
+import { LIMITS } from "../utils/limits.js";
 
 function Header() {
   return h("div", { key: "header", class: "header" }, [h("span", { class: "title" }, ["BomberMan"])]);
@@ -72,6 +73,7 @@ function JoinRoomPopUp(app) {
           "input",
           {
             ref: ref("JoinRInput"),
+            maxlength: LIMITS.roomHash,
             onKeyUp: (e) => {
               if (e.key == "Enter") {
                 StartGetRoom(app, "JR", getRef("JoinRInput").value);
@@ -89,7 +91,13 @@ function JoinRoomPopUp(app) {
             onClick: async () => {
               // paste() resolves to undefined when the clipboard is refused;
               // concatenating that would put the string "undefined" in the box.
-              getRef("JoinRInput").value += (await paste()) || "";
+              const box = getRef("JoinRInput");
+              // maxlength only governs typing: assigning .value would sail
+              // straight past it.
+              box.value = (box.value + ((await paste()) || "")).slice(
+                0,
+                LIMITS.roomHash
+              );
             },
           },
           ["paste"]

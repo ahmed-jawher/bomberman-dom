@@ -118,10 +118,13 @@ function resetAnimationState() {
   }
 }
 
-function setPlayerPosition(Position) {
+function setPlayerPosition(room) {
   for (let i = 0; i < 4; i++) {
-    playerPosition[i].x = Position[i].x * tileSize;
-    playerPosition[i].y = Position[i].y * tileSize;
+    // The server's pixel position is the truth. It is only missing from a
+    // room snapshot taken before it existed; fall back to the tile then.
+    const px = room.pixelPosition?.[i];
+    playerPosition[i].x = px ? px.x : room.playerPosition[i].x * tileSize;
+    playerPosition[i].y = px ? px.y : room.playerPosition[i].y * tileSize;
   }
 }
 
@@ -135,7 +138,7 @@ export async function StartGameLoop() {
   inputManager = new InputManager();
   document.addEventListener("keydown", handleKeyDown);
 
-  setPlayerPosition(INFO.room.playerPosition);
+  setPlayerPosition(INFO.room);
   resetAnimationState();
 
   let PLayers = [];
@@ -160,12 +163,14 @@ export async function StartGameLoop() {
   id = requestAnimationFrame(gameLoop);
 }
 
-export function StopGameLoop() {
-  if (id) {
-    cancelAnimationFrame(id);
-    id = null;
-  }
-
+/**
+ * Take the controls away without stopping the loop. A player who has just been
+ * caught in a blast must not be able to walk or drop bombs any more, but their
+ * sprite — and everyone else's — has to keep animating while the fire burns and
+ * the body fades out, which is exactly the couple of seconds StopGameLoop()
+ * used to cut short.
+ */
+export function StopPlayerInput() {
   // Tearing the input down belongs here, not at the end of StartGameLoop:
   // now that removeEvents() actually removes the listeners, unbinding there
   // would kill the controls the moment the loop started.
@@ -175,4 +180,13 @@ export function StopGameLoop() {
   }
 
   document.removeEventListener("keydown", handleKeyDown);
+}
+
+export function StopGameLoop() {
+  if (id) {
+    cancelAnimationFrame(id);
+    id = null;
+  }
+
+  StopPlayerInput();
 }

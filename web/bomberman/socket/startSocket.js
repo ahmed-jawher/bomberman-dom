@@ -1,8 +1,54 @@
 import { updateInput22 } from "../gameLoop/playerMovement.js";
 import { INFO } from "../utils/playerStatus.js";
 import { setBomb } from "../gameLoop/bomb.js";
-import { StopGameLoop } from "../gameLoop/playerMovement.js";
+import { StopGameLoop, StopPlayerInput } from "../gameLoop/playerMovement.js";
 import { getRef } from "../utils/refs.js";
+
+/**
+ * How long the board stays on screen after a player is hit, before the result
+ * panel replaces it. The bomb's fire animation runs for 1.2s and the body fades
+ * out over 0.9s, so anything shorter would announce the death before the player
+ * had seen what caused it.
+ */
+const RESULT_DELAY = 2200;
+
+let resultTimer = null;
+
+/** Paint a player as dead: the sprite fades out where it was standing. */
+function markLoser(playerNbr) {
+  getRef("player" + playerNbr.toString())?.classList.add("loser");
+}
+
+/**
+ * Hand the game over to the result panel, but only once the blast has played
+ * out. The panel then stays up until "Play Again" is clicked — nothing here
+ * navigates or reloads on a timer any more.
+ */
+function showResultLater(app, isWin) {
+  // The first result decided is the real one. A player eliminated by the same
+  // explosion that ends the game gets a "lives" and a "win" event in the same
+  // tick, and the later one only fills in the winner's name.
+  if (resultTimer !== null) return;
+
+  resultTimer = setTimeout(() => {
+    resultTimer = null;
+    StopGameLoop();
+    if (INFO.socket) {
+      INFO.socket.removeAllListeners();
+      INFO.socket.disconnect();
+      INFO.socket = undefined;
+    }
+    app.setState("isWin", isWin);
+  }, RESULT_DELAY);
+}
+
+/** Cancel a pending result, so leaving the game cannot pop the panel later. */
+export function clearPendingResult() {
+  if (resultTimer !== null) {
+    clearTimeout(resultTimer);
+    resultTimer = null;
+  }
+}
 
 export function startWebSocket(app, roomUuid) {
   console.log("START WEBSOCKET");
@@ -62,43 +108,34 @@ export function startWebSocket(app, roomUuid) {
   socket.on("lives", (Info) => {
     if (Info.win == true) {
       const uuid = localStorage.getItem("uuid");
-      if (uuid == Info.Uuid) {
+      // Recorded whoever won, for everyone: a player knocked out by the very
+      // blast that ended the game is still here to read the panel, and the
+      // first thing they ask is who took it.
+      app.setState("winnerUuid", Info.Uuid);
+      app.setState("isDraw", Info.draw === true);
+      app.setState(
+        "winnerName",
+        Info.nickname ||
+          INFO.Players?.find((p) => p.Uuid === Info.Uuid)?.Nickname ||
+          ""
+      );
+      if (Info.standings) app.setState("standings", Info.standings);
 
-        console.log("wiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiin");
-        app.setState("isWin", true);
+      // Nobody can act any more, but the board keeps running until the panel.
+      StopPlayerInput();
+      showResultLater(app, uuid == Info.Uuid);
+      return;
+    }
+
+    if (Info.lives <= 0) {
+      markLoser(Info.playerNbr);
+      if (INFO.playerNbr == Info.playerNbr) {
+        StopPlayerInput();
+        showResultLater(app, false);
       }
-      StopGameLoop();
-      setTimeout(() => {
-        location.reload();
-      }, 2000)
-      return;
-    }
-    if (Info.lives <= 0 && INFO.playerNbr == Info.playerNbr) {
-      socket.removeAllListeners();
-      socket.disconnect();
-      INFO.socket = undefined;
-
-      StopGameLoop();
-
-      console.log("looooooooooooooooooooooooooooooooooooooose");
-
-      app.setState("isWin", false);
-      setTimeout(() => {
-        location.reload();
-      }, 2000)
-      return;
-    }
-    if (Info?.lives == 0) {
-      let loser = getRef("player" + Info.playerNbr.toString());
-      loser?.classList.add("loser");
     }
 
-
-    app.setState("live" + Info?.playerNbr.toString(), Info.lives);
-  });
-
-  socket.on("winStatus", (status) => {
-    app.setState("isWin", status.status);
+    app.setState("live" + Info?.playerNbr.toString(), Math.max(Info.lives, 0));
   });
 }
 

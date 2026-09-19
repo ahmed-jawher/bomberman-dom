@@ -51,6 +51,12 @@ io.on("connection", (socket) => {
   // Join a room
   socket.on("join-room", (room) => {
     socket.join(room);
+    // Hand the newcomer the clock as it stands. They joined over HTTP before
+    // this socket existed, so they would otherwise show 0 until the next tick.
+    const countdown = Rooms[room]?.Countdown;
+    if (typeof countdown === "number") {
+      socket.emit("timer", { timer: countdown });
+    }
   });
 
   // The client announces which player it is as soon as it connects. That is

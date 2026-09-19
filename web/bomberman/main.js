@@ -15,7 +15,11 @@ export const app = createApp({
     live3: 3,
     live4: 3,
     isWin: undefined,
-    timer: "0",
+    winnerName: undefined,
+    winnerUuid: undefined,
+    standings: undefined,
+    isDraw: undefined,
+    timer: "--",
   },
 });
 

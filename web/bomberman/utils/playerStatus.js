@@ -121,6 +121,16 @@ export async function StartGetRoom(app, type, RoomUuid) {
 
     app.setState("Players", data.room.Players);
     app.setState("map", data.room.map);
+    // The server hands a player already in a running game their seat back
+    // (another tab of the same browser got there first): go straight in.
+    if (data.room.IsStart) {
+      data.room.Players.forEach((player, index) => {
+        app.setState("live" + (index + 1).toString(), player.Lives);
+      });
+      if (!INFO.socket) startWebSocket(app, INFO.roomUuid);
+      app.router.navigate("/game");
+      return;
+    }
     app.router.navigate("/chat");
   } else {
     app.router.navigate("/");

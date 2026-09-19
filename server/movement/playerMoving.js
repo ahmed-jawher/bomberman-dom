@@ -35,15 +35,21 @@ export function isValidMove(roomUuid, moveInfo) {
   // to make up.
   if (
     !keys ||
-    !moveInfo.position ||
-    !Number.isFinite(moveInfo.position.x) ||
-    !Number.isFinite(moveInfo.position.y) ||
     !Number.isInteger(playerNbr) ||
     playerNbr < 1 ||
     playerNbr > currentRoom.Players.length
   ) {
     return false;
   }
+
+  // Step from where the server last put this player, never from the position
+  // in the packet. The client only learns its position from our echo, so what
+  // it sends is always one round trip stale: every packet sent while an echo
+  // was in flight carried the same coordinates and moved the player by the
+  // same single pixel. Owning it here also stops a client from teleporting by
+  // simply claiming a different position.
+  const stored = currentRoom.pixelPosition[playerNbr - 1];
+  moveInfo.position = { x: stored.x, y: stored.y };
 
   const X = currentRoom.playerPosition[playerNbr - 1].x;
   const Y = currentRoom.playerPosition[playerNbr - 1].y;
@@ -240,8 +246,10 @@ export function isValidMove(roomUuid, moveInfo) {
     moveInfo.position.y += currentRoom.Players[playerNbr - 1].Speed;
   }
 
-  // console.log(moveInfo.position);
-  // console.log(currentRoom.map[1]);
+  currentRoom.pixelPosition[playerNbr - 1] = {
+    x: moveInfo.position.x,
+    y: moveInfo.position.y,
+  };
 
   return moveInfo;
 }

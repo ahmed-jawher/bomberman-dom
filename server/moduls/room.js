@@ -1,6 +1,8 @@
 import { generateUUID } from "../service/uuid.js";
 import { prepereBaord } from "../movement/board.js";
 
+const TILE_SIZE = 50;
+
 export class Room {
   constructor(uuid, Map) {
     this.Uuid = uuid;
@@ -20,6 +22,14 @@ export class Room {
       { x: 1, y: 13 }, // player 3
       { x: 15, y: 13 }, // player 4
     ];
+    // Where each sprite actually is, in pixels. The server owns this: moving
+    // from a position the client sends back meant a step could only be taken
+    // once the previous one had made the round trip, so a player on a slow
+    // link (a forwarded port, another country) crawled at 1px per ping.
+    this.pixelPosition = this.playerPosition.map(({ x, y }) => ({
+      x: x * TILE_SIZE,
+      y: y * TILE_SIZE,
+    }));
   }
 }
 
