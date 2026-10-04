@@ -47,7 +47,7 @@ box-shadow: inset 0 0 100px rgba(123, 44, 191, 0.4);
   padding: 5px 10px;
   border-radius: 2px;
   position: relative;
-  animation: pulse 2s infinite;
+  animation: timerPulse 2s infinite;
 }
 
 .copybtn {
@@ -139,7 +139,6 @@ box-shadow: inset 0 0 100px rgba(123, 44, 191, 0.4);
   border-left: 3px solid var(--secondary-color);
   word-wrap: break-word;
   animation: slideIn 0.3s ease;
-  backdrop-filter: blur(5px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -246,10 +245,9 @@ box-shadow: inset 0 0 100px rgba(123, 44, 191, 0.4);
 }
 
 /* Animations */
-@keyframes pulse {
-  0% { opacity: 1; text-shadow: 0 0 5px rgba(111, 255, 135, 0.5); }
-  50% { opacity: 0.9; text-shadow: 0 0 15px rgba(111, 255, 135, 0.8); }
-  100% { opacity: 1; text-shadow: 0 0 5px rgba(111, 255, 135, 0.5); }
+@keyframes timerPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.9; }
 }
 
 @keyframes slideIn {

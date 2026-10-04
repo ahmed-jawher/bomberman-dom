@@ -21,7 +21,7 @@
   border: 1px solid var(--secondary-color);
   background-color: rgba(13, 27, 42, 0.9);
   position: relative;
-  animation: glow 3s infinite alternate;
+  box-shadow: 0 0 30px rgba(123, 44, 191, 0.6);
 }
 
 /* Header */
@@ -83,7 +83,6 @@
   align-items: center;
   background-color: rgba(0, 0, 0, 0.8);
   z-index: 100;
-  backdrop-filter: blur(5px);
 }
 
 .popup2 {
@@ -166,11 +165,6 @@
 }
 
 /* Animations */
-@keyframes glow {
-  0% { box-shadow: 0 0 20px rgba(123, 44, 191, 0.4); }
-  100% { box-shadow: 0 0 40px rgba(123, 44, 191, 0.8), 0 0 60px rgba(0, 180, 216, 0.3); }
-}
-
 @keyframes popIn {
   from { transform: scale(0.8); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
@@ -206,7 +200,7 @@
   background-color: rgba(13, 27, 42, 0.8);
   border: 2px solid var(--secondary-color);
   color: var(--light-color);
-  animation: glow 3s infinite alternate;
+  box-shadow: 0 0 30px rgba(123, 44, 191, 0.6);
   overflow-y: scroll;
 }
 
